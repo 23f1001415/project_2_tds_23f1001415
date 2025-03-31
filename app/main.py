@@ -1,9 +1,15 @@
+import logging
+import sys
 from fastapi import FastAPI, File, UploadFile, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import os
 from typing import Optional
 from app.utils.openai_client import get_openai_response
 from app.utils.file_handler import save_upload_file_temporarily
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Import the functions you want to test directly
 from app.utils.functions import *
@@ -25,16 +31,19 @@ async def process_question(
     question: str = Form(...), file: Optional[UploadFile] = File(None)
 ):
     try:
+        logger.info("Request received")
         # Save file temporarily if provided
         temp_file_path = None
         if file:
             temp_file_path = await save_upload_file_temporarily(file)
-
+            
+        logger.info("Processing with OpenAI")
         # Get answer from OpenAI
         answer = await get_openai_response(question, temp_file_path)
-
+        logger.info("Response generated")
         return {"answer": answer}
     except Exception as e:
+        logger.error(f"Error: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 

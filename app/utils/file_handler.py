@@ -6,11 +6,13 @@ from fastapi import UploadFile
 async def save_upload_file_temporarily(upload_file: UploadFile) -> str:
     """
     Save an upload file temporarily and return the path to the saved file.
+    Modified for Vercel serverless compatibility.
     """
+    # Always use /tmp directory for Vercel
+    temp_dir = "/tmp"
+    os.makedirs(temp_dir, exist_ok=True)
+    
     try:
-        # Create a temporary directory
-        temp_dir = tempfile.mkdtemp()
-        
         # Create a path to save the file
         file_path = os.path.join(temp_dir, upload_file.filename)
         
@@ -22,7 +24,6 @@ async def save_upload_file_temporarily(upload_file: UploadFile) -> str:
         # Return the path to the saved file
         return file_path
     except Exception as e:
-        # Clean up the temporary directory if an error occurs
-        if os.path.exists(temp_dir):
-            shutil.rmtree(temp_dir)
+        # Log the error but we don't need to clean up /tmp
+        print(f"Error saving file: {str(e)}")
         raise e
