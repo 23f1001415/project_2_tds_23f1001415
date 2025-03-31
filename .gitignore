@@ -1,1 +1,9 @@
-virtual_env/
+venv/
+__pycache__/
+*.py[cod]
+*.class
+.env
+.pytest_cache/
+.coverage
+htmlcov/
+.DS_Store
