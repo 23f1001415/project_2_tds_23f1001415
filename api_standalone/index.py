@@ -2,7 +2,9 @@ from fastapi import FastAPI, Form, File, UploadFile
 from typing import Optional
  
 app = FastAPI()
-
+# 
+# 
+print(123)
 @app.get("/")
 async def root():
     return {"message": "API is online"}
