@@ -25,6 +25,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/")
+async def root():
+    """Root endpoint that provides basic API information"""
+    return {
+        "message": "Welcome to the IITM Assignment API",
+        "usage": "Send POST requests to /api/ endpoint",
+        "status": "online"
+    }
 
 @app.post("/api/")
 async def process_question(
